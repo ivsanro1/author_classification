@@ -1,0 +1,7 @@
+version: "3.9"
+services:
+  devenv:
+    build: .
+
+    ports:
+      - "8891:8888" # Jupyter
