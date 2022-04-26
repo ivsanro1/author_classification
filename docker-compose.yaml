@@ -4,4 +4,7 @@ services:
     build: .
 
     ports:
-      - "8891:8888" # Jupyter
+      - "8890:8888" # Jupyter
+      
+    volumes:
+      - ./models:/app/models # Keep models in host machine once trained/downloaded
