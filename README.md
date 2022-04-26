@@ -13,18 +13,33 @@ Recommended RAM
 - At least 6 GB to train the model.
 - At least 4 GB to run predictions with the model. Take into account that it depends on how much data you try to predict, so consider splitting the prediction in batches if you get mem errors.
 
+# Main repository assets
+- `notebooks/exploratory_data_analysis.ipynb`: Notebook for Exploratory Data Analysis of the training data under `data/train.csv`
+- `notebooks/train_model.ipynb`: Notebook to train the Author Classification model, and fitting other assets needed for feature extraction. Running this notebook will use the trainindata under `data/train.csv`, and validate the trained model with a split of that training set.
+- `predict.py`: Script to infer using the trained models, which will be under `models/`. You can run the script without having trained the models yourself and the models will be automatically downloaded from Google Drive and unpacked in the directory `models/`.
 
-# How to run prediction
-Assuming your python3.7 installation is callable via `python3`, you will be able to run the predictions by just running these lines in console:
+# How to run the prediction (`predict.py`)
+Assuming you have Docker installed, first run:
+
 ```
-pip install requirements.txt
-python3 -m spacy download en_core_web_sm
-python3 predict.py --input TO_BE_DEFINED --output TO_BE_DEFINED2
+docker-compose up --build
 ```
 
-Running this command will read the input dataset in the file specified by `--input INPUT`. It will write the prediction output in the file specified by `--output OUTPUT`.
+This will install all the needed dependencies and run a Jupyter Notebook Server which will be accessible once the container is running if you navigate with your web browser to:
+
+```
+localhost:8890
+```
+
+You will see the Jupyter Notebook interface. Navigate to the top right corner and open a new terminal:
+
+ ![](how_to_open_terminal_jupyter_notebook.gif)
+
+Once in the terminal run this command to run the prediction:
+
+```
+python3 predict.py data/test.csv results.csv
+```
 
 
-TODO: 
-Add in docker all the project
-Try to run inside docker
+The script will read the input dataset in the file specified by the first parameter and it will write the prediction output in the file specified by the second parameter.
