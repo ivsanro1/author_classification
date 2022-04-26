@@ -17,7 +17,8 @@ RUN apt-get -y update --fix-missing
 
 RUN pip install pyyaml==5.1.2
 RUN pip install pip==20.2.2
-RUN pip install numpy==1.21.1 cython==0.29
+RUN pip install numpy==1.21.1
+RUN pip install setuptools==46.1.3
 
 
 # Install Jupyter and extensions to run the notebooks
@@ -29,13 +30,22 @@ RUN pip install jupyter_contrib_nbextensions==0.5.1 &&\
 # Jupyter resource usage
 RUN pip install jupyter-resource-usage==0.6.0
 
+RUN mkdir -p /app
+WORKDIR app
+
 ADD requirements.txt .
 RUN pip install -r requirements.txt
 
 RUN python3 -m spacy download en_core_web_sm
 
 RUN apt install dos2unix
+
+COPY . .
 COPY docker-entrypoint.sh /bin/docker-entrypoint.sh
 RUN dos2unix /bin/docker-entrypoint.sh
 RUN chmod +x /bin/docker-entrypoint.sh
+
+RUN python3 setup.py install
+
+
 ENTRYPOINT ["/bin/docker-entrypoint.sh"]
