@@ -43,3 +43,12 @@ python3 predict.py data/test.csv results.csv
 
 
 The script will read the input dataset in the file specified by the first parameter and it will write the prediction output in the file specified by the second parameter.
+
+
+# Code and documentation
+
+The main code for this project is under the package `author_classification/`. This package is installable via `python3 setup.py install`, and it can be imported after being installed. You can see how this is being done in the Dockerfile.
+
+The documentation for this module can be found under `doc/` and it has been generated with `pdoc3`.
+
+To navigate the documentation, simply open `doc/author_classification/index.html` with your browser.

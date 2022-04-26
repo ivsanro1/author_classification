@@ -38,7 +38,7 @@ def plot_wordclouds(list_tuples_title_wordcloud:List[Tuple[str, PIL.Image.Image]
 def plot_vertical_histograms_sidebyside(
     list_tuples_titles_histogram_figures: List[Tuple[str, plotly.graph_objs.Figure]],
     height=1000,
-    width=900
+    width=1200
 ):
     num_row_plots = 1
     num_col_plots = len(list_tuples_titles_histogram_figures)

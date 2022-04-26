@@ -73,7 +73,7 @@ CHARS_ALL = CHARS_QUOTE + CHARS_APOSTROPHE + CHARS_PARENTHESIS + CHARS_HYPHEN + 
 REGEX_ALL_CHARS_SUB = '|'.join([re.escape(c) for c in CHARS_ALL])
 
 # Function for expanding contractions (borrowed)
-def expand_contractions(txt:str) -> Tuple(str, int):
+def expand_contractions(txt:str) -> Tuple[str, int]:
     '''
     Expands the different contractions defined by `DICT_CONTRACTIONS` in the text. For example, "mustn't've" in the `txt` would become "must not have"
 
@@ -126,12 +126,9 @@ def remove_stopwords(txt:str) -> str:
 
 def preprocess_text(txt:str, lemmatize:bool=False) -> str:
     '''
-    Preprocesses the text applying a composed function that does:
-    - Quote normalization
-    - Apostrophe normalization
-    - Contraction expansion
-    - Lemmatize (if `lemmatize==True`)
-    - 
+    Preprocesses the text applying a composed function that normalizes quotes, normalizes apostrophes,
+    expands contractions, lemmatizes (if `lemmatize==True`), removes punctuations, normalize spaces, removes single quotes,
+    makes all text lowercase and removes stopwords.
     '''
     for fn in [
         normalize_quotes,
