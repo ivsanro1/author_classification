@@ -64,7 +64,9 @@ def plot_wordclouds(list_tuples_title_wordcloud:List[Tuple[str, PIL.Image.Image]
 
 
 def plot_vertical_histograms_sidebyside(
-    list_tuples_titles_histogram_figures: List[Tuple[str, plotly.graph_objs.Figure]]
+    list_tuples_titles_histogram_figures: List[Tuple[str, plotly.graph_objs.Figure]],
+    height=1000,
+    width=1200
 ):
     num_row_plots = 1
     num_col_plots = len(list_tuples_titles_histogram_figures)
@@ -85,8 +87,8 @@ def plot_vertical_histograms_sidebyside(
         fig.update_yaxes(row=1, col=i+1, autorange=&#39;reversed&#39;)
         
     fig.update_layout(
-        height=1000,
-        width=1200,
+        height=height,
+        width=width,
         yaxis_title=&#39;Word&#39;,
         xaxis_title=&#39;Count&#39;,
     )
@@ -179,7 +181,7 @@ def plot_most_common_words_freq(list_tuples_from_counter, height=1000, width=500
 </details>
 </dd>
 <dt id="author_classification.plot.plot_vertical_histograms_sidebyside"><code class="name flex">
-<span>def <span class="ident">plot_vertical_histograms_sidebyside</span></span>(<span>list_tuples_titles_histogram_figures: List[Tuple[str, plotly.graph_objs._figure.Figure]])</span>
+<span>def <span class="ident">plot_vertical_histograms_sidebyside</span></span>(<span>list_tuples_titles_histogram_figures: List[Tuple[str, plotly.graph_objs._figure.Figure]], height=1000, width=1200)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -188,7 +190,9 @@ def plot_most_common_words_freq(list_tuples_from_counter, height=1000, width=500
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def plot_vertical_histograms_sidebyside(
-    list_tuples_titles_histogram_figures: List[Tuple[str, plotly.graph_objs.Figure]]
+    list_tuples_titles_histogram_figures: List[Tuple[str, plotly.graph_objs.Figure]],
+    height=1000,
+    width=1200
 ):
     num_row_plots = 1
     num_col_plots = len(list_tuples_titles_histogram_figures)
@@ -209,8 +213,8 @@ def plot_most_common_words_freq(list_tuples_from_counter, height=1000, width=500
         fig.update_yaxes(row=1, col=i+1, autorange=&#39;reversed&#39;)
         
     fig.update_layout(
-        height=1000,
-        width=1200,
+        height=height,
+        width=width,
         yaxis_title=&#39;Word&#39;,
         xaxis_title=&#39;Count&#39;,
     )

@@ -27,11 +27,13 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">import re
+from typing import Tuple
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import nltk
 import spacy
 
+nltk.download(&#39;stopwords&#39;, quiet=True)
 nltk.download(&#39;punkt&#39;, quiet=True)
 STOPWORDS_EN = set(stopwords.words(&#39;english&#39;))
 
@@ -99,7 +101,14 @@ CHARS_ALL = CHARS_QUOTE + CHARS_APOSTROPHE + CHARS_PARENTHESIS + CHARS_HYPHEN + 
 REGEX_ALL_CHARS_SUB = &#39;|&#39;.join([re.escape(c) for c in CHARS_ALL])
 
 # Function for expanding contractions (borrowed)
-def expand_contractions(txt):
+def expand_contractions(txt:str) -&gt; Tuple[str, int]:
+    &#39;&#39;&#39;
+    Expands the different contractions defined by `DICT_CONTRACTIONS` in the text. For example, &#34;mustn&#39;t&#39;ve&#34; in the `txt` would become &#34;must not have&#34;
+
+    Returns:
+        Tuple(str, int): A `Tuple`. The first element of the tuple is a `str` containing the text with replaced
+        contractions and the second element of the tuple is an `int` indicating the number of replacements made.
+    &#39;&#39;&#39;
     num_replacements = 0
     def replace(match):
         nonlocal num_replacements
@@ -108,30 +117,30 @@ def expand_contractions(txt):
     return (REGEX_CONTRACTIONS.sub(replace, txt), num_replacements)
 
 
-def normalize_spaces(txt):
+def normalize_spaces(txt:str) -&gt; str:
     &#39;&#39;&#39;Returns the text with the different kinds of spaces (newline, tab, space,
        nonbreaking space, etc.) converted to one space&#39;&#39;&#39;
     return re.sub(&#39;(\s|\t|\n)+&#39;, &#39; &#39;, txt)
 
 
-def normalize_quotes(txt):
+def normalize_quotes(txt:str) -&gt; str:
     &#39;&#39;&#39;Returns the text with the different kinds of quotes
-    (« » ‹ › “ ‟ ” &#34; ❝ ❞ ❮ ❯ ⹂ 〝 〞 〟 ＂) converted to normal quote (&#34;)&#39;&#39;&#39;
+    (`« » ‹ › “ ‟ ” &#34; ❝ ❞ ❮ ❯ ⹂ 〝 〞 〟 ＂`) converted to normal quote (`&#34;`)&#39;&#39;&#39;
     return re.sub(REGEX_ALL_QUOTES, &#39;&#34;&#39;, txt)
 
 
-def normalize_apostrophes(txt):
+def normalize_apostrophes(txt:str) -&gt; str:
     &#39;&#39;&#39;Returns the text with the different kinds of apostrophes
-    (’ ‘ ‛ ❛ ❜ ❟) converted to normal apostrophe (&#39;)&#39;&#39;&#39;
+    (`’ ‘ ‛ ❛ ❜ ❟`) converted to normal apostrophe (`&#39;`)&#39;&#39;&#39;
     return re.sub(REGEX_ALL_APOSTROPHES, &#34;&#39;&#34;, txt)
 
 
-def remove_punct(txt):
+def remove_punct(txt:str) -&gt; str:
     &#39;&#39;&#39;Returns the text with the characters defined by `REGEX_ALL_CHARS_SUB` substituted by one space&#39;&#39;&#39;
     return re.sub(REGEX_ALL_CHARS_SUB, &#39; &#39;, txt)
 
 
-def remove_single_quotes(txt):
+def remove_single_quotes(txt:str) -&gt; str:
     &#39;&#39;&#39;
     Remove single quote in a not generic way, to avoid removing contractions (e.g. they&#39;ve)
         https://regex101.com/r/oGSErP/1
@@ -139,11 +148,16 @@ def remove_single_quotes(txt):
     return re.sub(&#39;&#39;&#39;(?&lt;!\w)&#39;|&#39;(?!\w)&#39;&#39;&#39;, &#39;&#39;, txt)
     
 
-def remove_stopwords(txt):
+def remove_stopwords(txt:str) -&gt; str:
     return &#39; &#39;.join([w for w in word_tokenize(txt) if w.lower() not in STOPWORDS_EN])
 
 
-def preprocess_text(txt, lemmatize=False):
+def preprocess_text(txt:str, lemmatize:bool=False) -&gt; str:
+    &#39;&#39;&#39;
+    Preprocesses the text applying a composed function that normalizes quotes, normalizes apostrophes,
+    expands contractions, lemmatizes (if `lemmatize==True`), removes punctuations, normalize spaces, removes single quotes,
+    makes all text lowercase and removes stopwords.
+    &#39;&#39;&#39;
     for fn in [
         normalize_quotes,
         normalize_apostrophes,
@@ -162,7 +176,7 @@ def preprocess_text(txt, lemmatize=False):
 
 
 
-def lemmatize_text(txt):
+def lemmatize_text(txt:str) -&gt; str:
     return &#39; &#39;.join([tok.lemma_ for tok in nlp(txt)])</code></pre>
 </details>
 </section>
@@ -174,15 +188,25 @@ def lemmatize_text(txt):
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="author_classification.preprocessing.expand_contractions"><code class="name flex">
-<span>def <span class="ident">expand_contractions</span></span>(<span>txt)</span>
+<span>def <span class="ident">expand_contractions</span></span>(<span>txt: str) ‑> Tuple[str, int]</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Expands the different contractions defined by <code>DICT_CONTRACTIONS</code> in the text. For example, "mustn't've" in the <code>txt</code> would become "must not have"</p>
+<h2 id="returns">Returns</h2>
+<p>Tuple(str, int): A <code>Tuple</code>. The first element of the tuple is a <code>str</code> containing the text with replaced
+contractions and the second element of the tuple is an <code>int</code> indicating the number of replacements made.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def expand_contractions(txt):
+<pre><code class="python">def expand_contractions(txt:str) -&gt; Tuple[str, int]:
+    &#39;&#39;&#39;
+    Expands the different contractions defined by `DICT_CONTRACTIONS` in the text. For example, &#34;mustn&#39;t&#39;ve&#34; in the `txt` would become &#34;must not have&#34;
+
+    Returns:
+        Tuple(str, int): A `Tuple`. The first element of the tuple is a `str` containing the text with replaced
+        contractions and the second element of the tuple is an `int` indicating the number of replacements made.
+    &#39;&#39;&#39;
     num_replacements = 0
     def replace(match):
         nonlocal num_replacements
@@ -192,7 +216,7 @@ def lemmatize_text(txt):
 </details>
 </dd>
 <dt id="author_classification.preprocessing.lemmatize_text"><code class="name flex">
-<span>def <span class="ident">lemmatize_text</span></span>(<span>txt)</span>
+<span>def <span class="ident">lemmatize_text</span></span>(<span>txt: str) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -200,44 +224,44 @@ def lemmatize_text(txt):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def lemmatize_text(txt):
+<pre><code class="python">def lemmatize_text(txt:str) -&gt; str:
     return &#39; &#39;.join([tok.lemma_ for tok in nlp(txt)])</code></pre>
 </details>
 </dd>
 <dt id="author_classification.preprocessing.normalize_apostrophes"><code class="name flex">
-<span>def <span class="ident">normalize_apostrophes</span></span>(<span>txt)</span>
+<span>def <span class="ident">normalize_apostrophes</span></span>(<span>txt: str) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns the text with the different kinds of apostrophes
-(’ ‘ ‛ ❛ ❜ ❟) converted to normal apostrophe (')</p></div>
+(<code>’ ‘ ‛ ❛ ❜ ❟</code>) converted to normal apostrophe (<code>'</code>)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def normalize_apostrophes(txt):
+<pre><code class="python">def normalize_apostrophes(txt:str) -&gt; str:
     &#39;&#39;&#39;Returns the text with the different kinds of apostrophes
-    (’ ‘ ‛ ❛ ❜ ❟) converted to normal apostrophe (&#39;)&#39;&#39;&#39;
+    (`’ ‘ ‛ ❛ ❜ ❟`) converted to normal apostrophe (`&#39;`)&#39;&#39;&#39;
     return re.sub(REGEX_ALL_APOSTROPHES, &#34;&#39;&#34;, txt)</code></pre>
 </details>
 </dd>
 <dt id="author_classification.preprocessing.normalize_quotes"><code class="name flex">
-<span>def <span class="ident">normalize_quotes</span></span>(<span>txt)</span>
+<span>def <span class="ident">normalize_quotes</span></span>(<span>txt: str) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns the text with the different kinds of quotes
-(« » ‹ › “ ‟ ” " ❝ ❞ ❮ ❯ ⹂ 〝 〞 〟 ＂) converted to normal quote (")</p></div>
+(<code>« » ‹ › “ ‟ ” " ❝ ❞ ❮ ❯ ⹂ 〝 〞 〟 ＂</code>) converted to normal quote (<code>"</code>)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def normalize_quotes(txt):
+<pre><code class="python">def normalize_quotes(txt:str) -&gt; str:
     &#39;&#39;&#39;Returns the text with the different kinds of quotes
-    (« » ‹ › “ ‟ ” &#34; ❝ ❞ ❮ ❯ ⹂ 〝 〞 〟 ＂) converted to normal quote (&#34;)&#39;&#39;&#39;
+    (`« » ‹ › “ ‟ ” &#34; ❝ ❞ ❮ ❯ ⹂ 〝 〞 〟 ＂`) converted to normal quote (`&#34;`)&#39;&#39;&#39;
     return re.sub(REGEX_ALL_QUOTES, &#39;&#34;&#39;, txt)</code></pre>
 </details>
 </dd>
 <dt id="author_classification.preprocessing.normalize_spaces"><code class="name flex">
-<span>def <span class="ident">normalize_spaces</span></span>(<span>txt)</span>
+<span>def <span class="ident">normalize_spaces</span></span>(<span>txt: str) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns the text with the different kinds of spaces (newline, tab, space,
@@ -246,22 +270,29 @@ nonbreaking space, etc.) converted to one space</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def normalize_spaces(txt):
+<pre><code class="python">def normalize_spaces(txt:str) -&gt; str:
     &#39;&#39;&#39;Returns the text with the different kinds of spaces (newline, tab, space,
        nonbreaking space, etc.) converted to one space&#39;&#39;&#39;
     return re.sub(&#39;(\s|\t|\n)+&#39;, &#39; &#39;, txt)</code></pre>
 </details>
 </dd>
 <dt id="author_classification.preprocessing.preprocess_text"><code class="name flex">
-<span>def <span class="ident">preprocess_text</span></span>(<span>txt, lemmatize=False)</span>
+<span>def <span class="ident">preprocess_text</span></span>(<span>txt: str, lemmatize: bool = False) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Preprocesses the text applying a composed function that normalizes quotes, normalizes apostrophes,
+expands contractions, lemmatizes (if <code>lemmatize==True</code>), removes punctuations, normalize spaces, removes single quotes,
+makes all text lowercase and removes stopwords.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def preprocess_text(txt, lemmatize=False):
+<pre><code class="python">def preprocess_text(txt:str, lemmatize:bool=False) -&gt; str:
+    &#39;&#39;&#39;
+    Preprocesses the text applying a composed function that normalizes quotes, normalizes apostrophes,
+    expands contractions, lemmatizes (if `lemmatize==True`), removes punctuations, normalize spaces, removes single quotes,
+    makes all text lowercase and removes stopwords.
+    &#39;&#39;&#39;
     for fn in [
         normalize_quotes,
         normalize_apostrophes,
@@ -279,7 +310,7 @@ nonbreaking space, etc.) converted to one space</p></div>
 </details>
 </dd>
 <dt id="author_classification.preprocessing.remove_punct"><code class="name flex">
-<span>def <span class="ident">remove_punct</span></span>(<span>txt)</span>
+<span>def <span class="ident">remove_punct</span></span>(<span>txt: str) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns the text with the characters defined by <code>REGEX_ALL_CHARS_SUB</code> substituted by one space</p></div>
@@ -287,13 +318,13 @@ nonbreaking space, etc.) converted to one space</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def remove_punct(txt):
+<pre><code class="python">def remove_punct(txt:str) -&gt; str:
     &#39;&#39;&#39;Returns the text with the characters defined by `REGEX_ALL_CHARS_SUB` substituted by one space&#39;&#39;&#39;
     return re.sub(REGEX_ALL_CHARS_SUB, &#39; &#39;, txt)</code></pre>
 </details>
 </dd>
 <dt id="author_classification.preprocessing.remove_single_quotes"><code class="name flex">
-<span>def <span class="ident">remove_single_quotes</span></span>(<span>txt)</span>
+<span>def <span class="ident">remove_single_quotes</span></span>(<span>txt: str) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Remove single quote in a not generic way, to avoid removing contractions (e.g. they've)
@@ -302,7 +333,7 @@ nonbreaking space, etc.) converted to one space</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def remove_single_quotes(txt):
+<pre><code class="python">def remove_single_quotes(txt:str) -&gt; str:
     &#39;&#39;&#39;
     Remove single quote in a not generic way, to avoid removing contractions (e.g. they&#39;ve)
         https://regex101.com/r/oGSErP/1
@@ -311,7 +342,7 @@ nonbreaking space, etc.) converted to one space</p></div>
 </details>
 </dd>
 <dt id="author_classification.preprocessing.remove_stopwords"><code class="name flex">
-<span>def <span class="ident">remove_stopwords</span></span>(<span>txt)</span>
+<span>def <span class="ident">remove_stopwords</span></span>(<span>txt: str) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -319,7 +350,7 @@ nonbreaking space, etc.) converted to one space</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def remove_stopwords(txt):
+<pre><code class="python">def remove_stopwords(txt:str) -&gt; str:
     return &#39; &#39;.join([w for w in word_tokenize(txt) if w.lower() not in STOPWORDS_EN])</code></pre>
 </details>
 </dd>
