@@ -1,10 +1,11 @@
-
 import re
+from typing import Tuple
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import nltk
 import spacy
 
+nltk.download('stopwords', quiet=True)
 nltk.download('punkt', quiet=True)
 STOPWORDS_EN = set(stopwords.words('english'))
 
@@ -72,7 +73,14 @@ CHARS_ALL = CHARS_QUOTE + CHARS_APOSTROPHE + CHARS_PARENTHESIS + CHARS_HYPHEN + 
 REGEX_ALL_CHARS_SUB = '|'.join([re.escape(c) for c in CHARS_ALL])
 
 # Function for expanding contractions (borrowed)
-def expand_contractions(txt):
+def expand_contractions(txt:str) -> Tuple(str, int):
+    '''
+    Expands the different contractions defined by `DICT_CONTRACTIONS` in the text. For example, "mustn't've" in the `txt` would become "must not have"
+
+    Returns:
+        Tuple(str, int): A `Tuple`. The first element of the tuple is a `str` containing the text with replaced
+        contractions and the second element of the tuple is an `int` indicating the number of replacements made.
+    '''
     num_replacements = 0
     def replace(match):
         nonlocal num_replacements
@@ -81,30 +89,30 @@ def expand_contractions(txt):
     return (REGEX_CONTRACTIONS.sub(replace, txt), num_replacements)
 
 
-def normalize_spaces(txt):
+def normalize_spaces(txt:str) -> str:
     '''Returns the text with the different kinds of spaces (newline, tab, space,
        nonbreaking space, etc.) converted to one space'''
     return re.sub('(\s|\t|\n)+', ' ', txt)
 
 
-def normalize_quotes(txt):
+def normalize_quotes(txt:str) -> str:
     '''Returns the text with the different kinds of quotes
-    (« » ‹ › “ ‟ ” " ❝ ❞ ❮ ❯ ⹂ 〝 〞 〟 ＂) converted to normal quote (")'''
+    (`« » ‹ › “ ‟ ” " ❝ ❞ ❮ ❯ ⹂ 〝 〞 〟 ＂`) converted to normal quote (`"`)'''
     return re.sub(REGEX_ALL_QUOTES, '"', txt)
 
 
-def normalize_apostrophes(txt):
+def normalize_apostrophes(txt:str) -> str:
     '''Returns the text with the different kinds of apostrophes
-    (’ ‘ ‛ ❛ ❜ ❟) converted to normal apostrophe (')'''
+    (`’ ‘ ‛ ❛ ❜ ❟`) converted to normal apostrophe (`'`)'''
     return re.sub(REGEX_ALL_APOSTROPHES, "'", txt)
 
 
-def remove_punct(txt):
+def remove_punct(txt:str) -> str:
     '''Returns the text with the characters defined by `REGEX_ALL_CHARS_SUB` substituted by one space'''
     return re.sub(REGEX_ALL_CHARS_SUB, ' ', txt)
 
 
-def remove_single_quotes(txt):
+def remove_single_quotes(txt:str) -> str:
     '''
     Remove single quote in a not generic way, to avoid removing contractions (e.g. they've)
         https://regex101.com/r/oGSErP/1
@@ -112,11 +120,19 @@ def remove_single_quotes(txt):
     return re.sub('''(?<!\w)'|'(?!\w)''', '', txt)
     
 
-def remove_stopwords(txt):
+def remove_stopwords(txt:str) -> str:
     return ' '.join([w for w in word_tokenize(txt) if w.lower() not in STOPWORDS_EN])
 
 
-def preprocess_text(txt, lemmatize=False):
+def preprocess_text(txt:str, lemmatize:bool=False) -> str:
+    '''
+    Preprocesses the text applying a composed function that does:
+    - Quote normalization
+    - Apostrophe normalization
+    - Contraction expansion
+    - Lemmatize (if `lemmatize==True`)
+    - 
+    '''
     for fn in [
         normalize_quotes,
         normalize_apostrophes,
@@ -135,5 +151,5 @@ def preprocess_text(txt, lemmatize=False):
 
 
 
-def lemmatize_text(txt):
+def lemmatize_text(txt:str) -> str:
     return ' '.join([tok.lemma_ for tok in nlp(txt)])
