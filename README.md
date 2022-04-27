@@ -14,9 +14,12 @@ Recommended RAM
 - At least 4 GB to run predictions with the model. Take into account that it depends on how much data you try to predict, so consider splitting the prediction in batches if you get mem errors.
 
 # Main repository assets
-- `notebooks/exploratory_data_analysis.ipynb`: Notebook for Exploratory Data Analysis of the training data under `data/train.csv`
+## Delivery
+- Exploratory data analysis as a form of Jupyter Notebook: `notebooks/exploratory_data_analysis.ipynb`
+- Standalone script that runs the whole pipeline on the test set and creates a file with the results: `predict.py` (see usage in next section). You can run the script without having trained the models yourself and the models will be automatically downloaded from Google Drive and unpacked in the directory `models/`.
+- File containing the predictions for the test set: `results.csv`.
+## Extra
 - `notebooks/train_model.ipynb`: Notebook to train the Author Classification model, and fitting other assets needed for feature extraction. Running this notebook will use the trainindata under `data/train.csv`, and validate the trained model with a split of that training set.
-- `predict.py`: Script to infer using the trained models, which will be under `models/`. You can run the script without having trained the models yourself and the models will be automatically downloaded from Google Drive and unpacked in the directory `models/`.
 
 # How to run the prediction (`predict.py`)
 Assuming you have Docker installed, clone this repository, go to the root of it and run:
