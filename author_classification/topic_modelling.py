@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 from nltk.tokenize import word_tokenize
 from nltk.util import ngrams
@@ -10,6 +11,7 @@ import pyLDAvis.gensim
 import pyLDAvis
 from typing import Dict
 
+
 def generate_topic_models(df:pd.DataFrame, colname_text:str, num_topics:int=10, bigrams:bool=True) -> Dict:
     '''Generates topic models with the LDA algorithm given a dataframe `df`, its text column `colname_text`, a number of topics `num_topics`.
     You can set `bigrams` to `True` if you want this analysis to be done on bigrams, otherwise the analysis will be done on single words (1-grams)
@@ -17,6 +19,7 @@ def generate_topic_models(df:pd.DataFrame, colname_text:str, num_topics:int=10, 
     Returns:
         Dict[str, object]: A dictionary containing the the `lda_model`, the `corpus`, `id2word` index to be used in the plot function `plot_topic_models`.
     '''
+    np.random.seed(288)
     if bigrams:
         fn_tokenize = lambda txt: [' '.join(tuple_bigram) for tuple_bigram in list(ngrams(word_tokenize(txt), 2))]
     else:
@@ -51,6 +54,7 @@ def plot_topic_models(d_ret_topic_modeling:Dict):
     '''
     # Visualize the topics
     pyLDAvis.enable_notebook()
+    np.random.seed(288)
 
     results_LDAavis = pyLDAvis.gensim.prepare(
         d_ret_topic_modeling['lda_model'],
