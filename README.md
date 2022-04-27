@@ -2,7 +2,7 @@
 This repository contains all the assets to perform Exploratory Data Analysis on data, Training, Evaluation and Prediction of a Machine Learning system that predicts authors given text fragments.
 
 # Environment
-We highly encourage you to run the docker-compose.yaml and go to `localhost:8890` to run the notebooks and the scripts to predict, given the number of dependencies of the project. However, if you are running on a Ubuntu 18.04 with Python 3.7 installed with a Jupyter installation, you can only install the dependencies in `requirements.txt` via `pip install requirements.txt` before running the notebooks and/or prediction script.
+We highly encourage you to run the docker-compose.yaml and go to `localhost:8890` to run the notebooks and the scripts to predict, given the number of dependencies of the project. This is explained below in the section `How to run the prediction`. However, if you are running on a Ubuntu 18.04 with Python 3.7 installed with a Jupyter installation, you can only install the dependencies in `requirements.txt` via `pip install requirements.txt` before running the notebooks and/or prediction script.
 
 # Software requirements
 Operative system: Linux (Ubuntu 18.04). Provided you have Docker installed, you can use the Dockerfile which will run on Ubuntu 18.04
@@ -19,30 +19,32 @@ Recommended RAM
 - `predict.py`: Script to infer using the trained models, which will be under `models/`. You can run the script without having trained the models yourself and the models will be automatically downloaded from Google Drive and unpacked in the directory `models/`.
 
 # How to run the prediction (`predict.py`)
-Assuming you have Docker installed, first run:
+Assuming you have Docker installed, clone this repository, go to the root of it and run:
 
 ```
 docker-compose up --build
 ```
 
-This will install all the needed dependencies and run a Jupyter Notebook Server which will be accessible once the container is running if you navigate with your web browser to:
+This will install all the needed dependencies and run a container with a Jupyter Notebook Server which will be accessible once the container is up and running.
+
+After it is up and running, navigate with your web browser to:
 
 ```
 localhost:8890
 ```
 
-You will see the Jupyter Notebook interface. Navigate to the top right corner and open a new terminal:
+You will see the Jupyter Notebook interface. Then, navigate to the top right corner and open a new terminal:
 
  ![](how_to_open_terminal_jupyter_notebook.gif)
 
-Once in the terminal run this command to run the prediction:
+Once in the terminal, run this command to run the prediction:
 
 ```
 python3 predict.py data/test.csv results.csv
 ```
 
 
-The script will read the input dataset in the file specified by the first parameter and it will write the prediction output in the file specified by the second parameter.
+The script will read the input dataset in the file specified by the first parameter (`data/test.csv`) and it will write the prediction output in the file specified by the second parameter (`results.csv`).
 
 
 # Code and documentation
